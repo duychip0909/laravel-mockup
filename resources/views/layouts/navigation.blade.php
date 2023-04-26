@@ -39,7 +39,7 @@
                                 <x-dropdown-link :href="route('category.index')">
                                     {{ __('Category News List') }}
                                 </x-dropdown-link>
-                                <x-dropdown-link>
+                                <x-dropdown-link :href="route('category.create')">
                                     {{ __('Create Category News') }}
                                 </x-dropdown-link>
                             </x-slot>

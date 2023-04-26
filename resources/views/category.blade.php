@@ -46,6 +46,7 @@
                                     <x-danger-button
                                         x-data=""
                                         x-on:click.prevent="$dispatch('open-modal', 'confirm-category-deletion')"
+                                        @click="$dispatch('delete', {{ $category->id }})"
                                     >
                                         {{ __('Delete') }}
                                     </x-danger-button>
@@ -66,7 +67,7 @@
     </div>
 
     <x-modal name="confirm-category-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" action="{{ route('profile.destroy') }}" class="p-6">
+        <form method="post" x-data="{id: null}" @delete.window="id = $event.detail" :action="'category/' + id" class="p-6">
             @csrf
             @method('delete')
 

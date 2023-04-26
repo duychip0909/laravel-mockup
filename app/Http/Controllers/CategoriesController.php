@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Validator;
 
 class CategoriesController extends Controller
 {
@@ -21,7 +23,12 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        return view('category-form');
+        $formOptions = [
+            'method' => 'post',
+            'action' => route('category.store'),
+            'button' => 'Create'
+        ];
+        return view('category-form', compact('formOptions'));
     }
 
     /**
@@ -29,7 +36,14 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string'
+        ]);
+        if ($validator->fails()) {
+            return back()->with('toast_error', $validator->messages()->all()[0])->withInput();
+        }
+        Categories::create($request->all());
+        return redirect()->route('category.index')->withToastSuccess('Your Category has been created!');
     }
 
     /**
@@ -59,8 +73,11 @@ class CategoriesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Categories $categories)
+    public function destroy(Categories $categories, $id)
     {
-        //
+        $category = $categories::findOrFail($id);
+        $category->delete();
+        toast('Your Category has been deleted!','success');
+        return redirect()->back();
     }
 }
