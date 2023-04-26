@@ -26,6 +26,9 @@
                                 Name
                             </th>
                             <th scope="col" class="px-6 py-3">
+                                Updated time
+                            </th>
+                            <th scope="col" hidden class="px-6 py-3">
                                 Action
                             </th>
                         </tr>
@@ -40,9 +43,14 @@
                                     {{ $category->name }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <x-primary-button>
-                                        {{ __('Edit') }}
-                                    </x-primary-button>
+                                    {!! date_format($category->updated_at, 'd/m/Y, h:i') !!}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <form class="inline" action="{{ route('category.edit', $category->id) }}" method="get">
+                                        <x-primary-button>
+                                            {{ __('Edit') }}
+                                        </x-primary-button>
+                                    </form>
                                     <x-danger-button
                                         x-data=""
                                         x-on:click.prevent="$dispatch('open-modal', 'confirm-category-deletion')"

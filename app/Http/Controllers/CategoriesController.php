@@ -43,7 +43,7 @@ class CategoriesController extends Controller
             return back()->with('toast_error', $validator->messages()->all()[0])->withInput();
         }
         Categories::create($request->all());
-        return redirect()->route('category.index')->withToastSuccess('Your Category has been created!');
+        return redirect()->route('category.index')->with('toast_success', 'Your Category has been created!');
     }
 
     /**
@@ -57,17 +57,29 @@ class CategoriesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Categories $categories)
+    public function edit(Categories $categories, $id)
     {
-        //
+        $category = $categories::findOrFail($id);
+        $formOptions = [
+            'method' => 'patch',
+            'action' => route('category.update', $category->id),
+            'button' => 'Save'
+        ];
+        return view('category-form', compact('category', 'formOptions'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Categories $categories)
+    public function update(Request $request, Categories $categories, $id)
     {
-        //
+        $category = $categories::findOrFail($id);
+        $data = $request->validate([
+            'name' => 'required|string'
+        ]);
+        $data['updated_at'] = now()->tz('asia/ho_chi_minh');
+        $category->update($data);
+        return redirect()->route('category.index')->with('toast_success', 'Your category has been updated');
     }
 
     /**
