@@ -4,19 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Masmerise\Toaster\Toaster;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
+use Masmerise\Toaster\Toast;
 
 class CategoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $categories = Categories::all();
-        return view('category', compact('categories'));
-    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -43,7 +42,7 @@ class CategoriesController extends Controller
             return back()->with('toast_error', $validator->messages()->all()[0])->withInput();
         }
         Categories::create($request->all());
-        return redirect()->route('category.index')->with('toast_success', 'Your Category has been created!');
+        return Redirect::route('news-category-index')->success('Your Category has been created!');
     }
 
     /**
@@ -79,7 +78,7 @@ class CategoriesController extends Controller
         ]);
         $data['updated_at'] = now()->tz('asia/ho_chi_minh');
         $category->update($data);
-        return redirect()->route('category.index')->with('toast_success', 'Your category has been updated');
+        return redirect()->route('news-category-index')->with('toast_success', 'Your category has been updated');
     }
 
     /**
@@ -87,9 +86,9 @@ class CategoriesController extends Controller
      */
     public function destroy(Categories $categories, $id)
     {
-        $category = $categories::findOrFail($id);
-        $category->delete();
-        toast('Your Category has been deleted!','success');
-        return redirect()->back();
+//        $category = $categories::findOrFail($id);
+//        $category->delete();
+//        toast('Your Category has been deleted!','success');
+//        return redirect()->back();
     }
 }

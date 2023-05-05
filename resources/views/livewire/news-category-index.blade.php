@@ -1,4 +1,4 @@
-<x-app-layout>
+<div>
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -28,7 +28,7 @@
                             <th scope="col" class="px-6 py-3">
                                 Updated time
                             </th>
-                            <th scope="col" hidden class="px-6 py-3">
+                            <th scope="col" class="px-6 py-3 text-transparent">
                                 Action
                             </th>
                         </tr>
@@ -46,15 +46,16 @@
                                     {!! date_format($category->updated_at, 'd/m/Y, h:i') !!}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <form class="inline" action="{{ route('category.edit', $category->id) }}" method="get">
+                                    <form class="inline" action="{{ route('news-category-form', $category->id) }}">
                                         <x-primary-button>
                                             {{ __('Edit') }}
                                         </x-primary-button>
                                     </form>
+
                                     <x-danger-button
                                         x-data=""
                                         x-on:click.prevent="$dispatch('open-modal', 'confirm-category-deletion')"
-                                        @click="$dispatch('delete', {{ $category->id }})"
+                                        wire:click.prevent="deleteId({{ $category->id }})"
                                     >
                                         {{ __('Delete') }}
                                     </x-danger-button>
@@ -75,10 +76,7 @@
     </div>
 
     <x-modal name="confirm-category-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
-        <form method="post" x-data="{id: null}" @delete.window="id = $event.detail" :action="'category/' + id" class="p-6">
-            @csrf
-            @method('delete')
-
+        <form class="p-6" wire:submit.prevent="destroy">
             <h2 class="text-lg text-center font-medium text-red-600">
                 {{ __('Are you sure you want to delete this category?') }}
             </h2>
@@ -88,10 +86,10 @@
                     {{ __('Cancel') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ml-3">
+                <x-danger-button class="ml-3" @click="$dispatch('close')">
                     {{ __('Delete Category') }}
                 </x-danger-button>
             </div>
         </form>
     </x-modal>
-</x-app-layout>
+</div>

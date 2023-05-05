@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Livewire\NewsCategoryIndex;
+use App\Http\Livewire\NewsCategoryForm;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\NewsController;
@@ -28,6 +30,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::group(['prefix' => 'category'], function () {
+       Route::get('index', NewsCategoryIndex::class)->name('news-category-index');
+       Route::get('{id}', NewsCategoryForm::class)->name('news-category-form');
+    });
 
     Route::resource('category', CategoriesController::class);
     Route::resource('news', NewsController::class);
